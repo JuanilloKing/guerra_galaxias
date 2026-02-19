@@ -13,12 +13,12 @@ class Reino:
     def agregar_nave(self, nave):
         """Añade una nave a la flota y actualiza el coste."""
         self.naves.append(nave)
-        self.creditos_gastados += nave.precio
+        self.creditos_gastados += nave.coste
 
     def agregar_mandaloriano(self, mandaloriano):
         """Añade un guerrero a la legión y actualiza el coste."""
         self.mandalorianos.append(mandaloriano)
-        self.creditos_gastados += mandaloriano.precio
+        self.creditos_gastados += mandaloriano.coste
 
     def esta_vivo(self) -> bool:
         """Verifica si al reino le queda alguna unidad con vida."""
