@@ -4,74 +4,47 @@
 class Nave:
     """Clase la cual herederá sus atributos a las demas naves"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
+    def __init__(self, nombre, ataque, defensa, velocidad, coste, vida):
         self.nombre = nombre
         self.ataque = ataque
         self.defensa = defensa
         self.velocidad = velocidad
         self.coste = coste
+        self.vida = vida
 
 
 class EstrellaMuerte(Nave):
     """Nave que representa la estrella de la muerte"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
-        super().__init__(nombre, ataque, defensa, velocidad, coste)
-        self.nombre = "Estrella de la Muerte"
-        self.ataque = 80
-        self.defensa = 90
-        self.vida = 1500
-        self.velocidad = 20
-        self.coste = 4500
+    def __init__(self):
+        super().__init__("Estrella de la muerte", 80, 90, 20, 4500, 1500)
+
 
 
 class Ejecutor(Nave):
     """Nave que representa ejecutor"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
-        super().__init__(nombre, ataque, defensa, velocidad, coste)
-        self.nombre = "Ejecutor"
-        self.ataque = 70
-        self.defensa = 80
-        self.vida = 1200
-        self.velocidad = 35
-        self.coste = 4000
+    def __init__(self):
+        super().__init__("Ejecutor", 70, 80, 35, 4000, 1200)
+
 
 
 class HalconMilenario(Nave):
     """Nave que representa el halcón milenario"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
-        super().__init__(nombre, ataque, defensa, velocidad, coste)
-        self.nombre = "Halcon Milenario"
-        self.ataque = 60
-        self.defensa = 50
-        self.vida = 800
-        self.velocidad = 70
-        self.coste = 2500
-
+    def __init__(self):
+        super().__init__("Halcon Milenario", 60, 50, 70, 2500, 800)
 
 class NaveRealNaboo(Nave):
     """Nave que representa la nave real de Naboo"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
-        super().__init__(nombre, ataque, defensa, velocidad, coste)
-        self.nombre = "Nave Real de Naboo"
-        self.ataque = 40
-        self.defensa = 60
-        self.vida = 600
-        self.velocidad = 50
-        self.coste = 2000
+    def __init__(self):
+        super().__init__("Nave Real de Naboo", 40, 60, 50, 2000, 600)
+
 
 
 class CazaEstelarJedi(Nave):
     """Nave caza estelar jedi"""
 
-    def __init__(self, nombre, ataque, defensa, velocidad, coste):
-        super().__init__(nombre, ataque, defensa, velocidad, coste)
-        self.nombre = "Caza Estellar Jedi"
-        self.ataque = 50
-        self.defensa = 40
-        self.vida = 400
-        self.velocidad = 80
-        self.coste = 1500
+    def __init__(self):
+        super().__init__("Caza Estelar Jedi", 50, 40, 80, 1500, 400)
