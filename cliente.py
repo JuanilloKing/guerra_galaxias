@@ -11,13 +11,18 @@ def jugar():
     print("1. Iniciar Guerra")
     print("2. Finalizar Servidor")
     print("Seleccionar opción para continuar:")
+    opcion = input()
+    if opcion == "1":
+        configurar_reino()
+    elif opcion == "2":
+        print("Finalizando servidor...")
 
-def mostrar_menu():
+def configurar_reino():
     """Función que muestra el menú principal del juego"""
     print("=== MENÚ PRINCIPAL ===")
     print("1. Crear Reino")
-    print("2. Agregar Nave")
-    print("3. Agregar Mandaloriano")
+    print("2. Agregar Naves")
+    print("3. Agregar Mandalorianos")
     print("4. Ver Reino")
     print("5. Salir")
     print("Seleccionar opción para continuar:")
@@ -35,17 +40,30 @@ def mostrar_menu():
         print("5. Caza estelar jedi")
         opcion = input()
         if opcion == "1":
-            nave_actual = nave.EstrellaMuerte
+            print("Cuantas Estrellas de la Muerte quieres agregar?")
+            cantidad = int(input())
+            for _ in range(cantidad):
+                reino_actual.agregar_nave(nave.EstrellaMuerte())
         if opcion == "2":
-            nave_actual = nave.Ejecutor
+            print("Cuantos Ejecutor quieres agregar?")
+            cantidad = int(input())
+            for _ in range(cantidad):
+                reino_actual.agregar_nave(nave.Ejecutor())
         if opcion == "3":
-            nave_actual = nave.HalconMilenario
+            print("Cuantos Halcon Milenario quieres agregar?")
+            cantidad = int(input())
+            for _ in range(cantidad):
+                reino_actual.agregar_nave(nave.HalconMilenario())
         if opcion == "4":
-            nave_actual = nave.NaveRealNaboo
+            print("Cuantas Naves Reales de Naboo quieres agregar?")
+            cantidad = int(input())
+            for _ in range(cantidad):
+                reino_actual.agregar_nave(nave.NaveRealNaboo())
         if opcion == "5":
-            nave_actual = nave.CazaEstelarJedi
-        if reino_actual:
-            reino_actual.agregar_nave()
+            print("Cuantos Caza estelar Jedi quieres agregar?")
+            cantidad = int(input())
+            for _ in range(cantidad):
+                reino_actual.agregar_nave(nave.CazaEstelarJedi())
         else:
             print("Primero debes crear un reino.")
     elif opcion == "3":
@@ -56,3 +74,6 @@ def mostrar_menu():
         print("Saliendo del juego.")
     else:
         print("Opción no válida. Inténtalo de nuevo.")
+
+if __name__ == "__main__":
+    jugar()
