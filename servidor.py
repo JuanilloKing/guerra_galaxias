@@ -7,7 +7,7 @@ import json
 import clases.reino as reino
 
 # Constantes del proyecto
-HOST = 'localhost'
+HOST = '10.7.14.31'
 PORT = 5000
 TIEMPO_CONEXION = 10
 MAX_CREDITOS = 100000
@@ -40,7 +40,7 @@ def ejecutar_servidor():
         print("\n=== SERVIDOR LA GUERRA DE LAS GALAXIAS (2026) ===")
         print("1. Iniciar Guerra")
         print("2. Finalizar Servidor")
-        opcion = input("Seleccionar opción: ")
+        opcion = input("Seleccionar opción para continuar: ")
 
         if opcion == "1":
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
@@ -49,11 +49,12 @@ def ejecutar_servidor():
                 server_socket.settimeout(TIEMPO_CONEXION)
 
                 reinos_conectados = []
-                print(
-                    f"Esperando conexión de dos reinos (Timeout: {TIEMPO_CONEXION}s)...")
 
                 try:
+                    print("🔥 INICIANDO GUERRA GALÁCTICA 🔥")
+
                     while len(reinos_conectados) < 2:
+                        print(f"Esperando conexión del Reino {len(reinos_conectados) + 1}")
                         conn, addr = server_socket.accept()
                         print(
                             f"Reino {len(reinos_conectados) + 1} conectado desde {addr}")
@@ -68,7 +69,7 @@ def ejecutar_servidor():
                                 continue
 
                             reinos_conectados.append(datos)
-                            print(f"Reino '{datos['nombre']}' listo.")
+                            print(f"Reino '{datos['nombre']}' conectado.")
 
                     iniciar_batalla(reinos_conectados[0], reinos_conectados[1])
 

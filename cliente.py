@@ -8,12 +8,9 @@ import clases.reino as reino
 import clases.nave as nave
 import clases.mandaloriano as mandaloriano
 
-HOST = 'localhost'
+HOST = '10.7.14.31'
 PUERTO = 5000
 LIMITE_CREDITOS = 100000
-
-"""s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((HOST,PUERTO))"""
 
 def configurar_reino():
     """Muestra el menú principal y gestiona la configuración del reino."""
