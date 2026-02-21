@@ -8,7 +8,7 @@ import clases.reino as reino
 import clases.nave as nave
 import clases.mandaloriano as mandaloriano
 
-HOST = '10.7.14.31'
+HOST = '127.0.0.1'
 PUERTO = 5000
 LIMITE_CREDITOS = 100000
 
@@ -84,15 +84,15 @@ def gestionar_naves(reino_obj):
 
 def gestionar_mandalorianos(reino_obj):
     """Submenú para la selección de mandalorianos."""
-    print("\nTipos: 1, 2, 3, 4, 5")
-    opc = input("Selecciona tipo: ")
+    print("\nNiveles de mandalorianos: 1, 2, 3, 4, 5")
+    opc = input("Selecciona el nivel de mandaloriano: ")
 
     tipo_mandaloriano = {
-        "1": mandaloriano.Mandaloriano1,
-        "2": mandaloriano.Mandaloriano2,
-        "3": mandaloriano.Mandaloriano3,
-        "4": mandaloriano.Mandaloriano4,
-        "5": mandaloriano.Mandaloriano5
+        "1": mandaloriano.MandalorianoNivel1,
+        "2": mandaloriano.MandalorianoNivel2,
+        "3": mandaloriano.MandalorianoNivel3,
+        "4": mandaloriano.MandalorianoNivel4,
+        "5": mandaloriano.MandalorianoNivel5
     }
 
     if opc in tipo_mandaloriano:
