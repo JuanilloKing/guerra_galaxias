@@ -17,7 +17,7 @@ class EstrellaMuerte(Nave):
     """Nave que representa la estrella de la muerte"""
 
     def __init__(self):
-        super().__init__("Estrella de la muerte", 80, 90, 20, 4500, 1500)
+        super().__init__("Estrella de la Muerte", 80, 90, 20, 4500, 1500)
 
 
 
