@@ -2,10 +2,6 @@
 Gestiona la conexión de los reinos, la recepción de datos y la guerra
 """
 
-#TODO: EL DUELO MIXTO SE EJECUTA CUANDO NO ES NECESARIO (A VECES), ARREGLAR
-#TODO: MEJORAR ESTETICA DE LOS MENSAJES POR CONSOLA (AÑADIR EMOJIS ESPACIADO ETC)
-#TODO: QUE EN UN MENSAJE FINAL CUANDO TERMINE LA GUERRA, SE DIGA QUIEN GANÓ
-
 import socket
 import json
 import clases.reino as reino
@@ -13,19 +9,28 @@ import clases.nave as nave
 import clases.mandaloriano as mandaloriano
 import random as r
 import time as t
+import sys as sys
+try:
+    from tabulate import tabulate
+except ImportError:
+    print("\n⚠️ATENCIÓN⚠️, Parece que no tienes la librería tabulate instalada en python")
+    print("No te preocupes es sencillo instalarla")
+    print("Simplemente ejecuta el siguiente comando en tu terminal:")
+    print("pip install tabulate")
+    sys.exit(1)
 
 # Constantes del proyecto
-HOST = '127.0.0.1'
+HOST = '127.0.0.1' #PONER LA IP DEL SERVIDOR SI SE VA A EJECUTAR POR RED
 PORT = 5000
 TIEMPO_CONEXION = 20
-MAX_CREDITOS = 100000
+MAX_CREDITOS = 50000
 
 def mostrar_configuraciones(reino1_data, reino2_data):
     """
     Esta funcion mostrará por pantalla todos los datos y configuraciones de cada reino
     
-    reino1_data(diccionario): Diccionario con los datos del reino1
-    reino2_data(diccionario): Diccionario con los datos del reino2
+    reino1_data(dict): Diccionario con los datos del reino1
+    reino2_data(dict): Diccionario con los datos del reino2
     """
     
     #Conteo de naves y mandalorianos de ambos reinos
@@ -51,7 +56,7 @@ def mostrar_configuraciones(reino1_data, reino2_data):
     conteo_mandalorianos_reino2 = contar_mandalorianos_por_tipo(tipos_de_mandalorianos, reino2_data)
     
     #Mostrar configuraciones reino 1
-    print("==========================================")
+    print("\n==========================================")
     print("📝 CONFIGURACIÓN REINO 1")
     print("==========================================")
     print(f"Nombre del reino: **{reino1_data['nombre']}**")
@@ -113,11 +118,14 @@ def contar_mandalorianos_por_tipo(tipos, reino):
     return conteo
 
 def iniciar_guerra(reino1_data, reino2_data):
+    """Es la función donde se ejecutará el bucle de la guerra
+
+    Args:
+        reino1_data(dict): Diccionario con los datos del reino1
+        reino2_data(dict): Diccionario con los datos del reino2
     """
-    Lógica de simulación de guerra entre dos reinos.
-    """
-    print("=== 🏟️ CAMPO DE GUERRA GALÁCTICO 🏟️ ===")
-    print(f"=== GUERRA: {reino1_data['nombre']} vs {reino2_data['nombre']} ===\n")
+    print("======== 🏟️ CAMPO DE GUERRA GALÁCTICO 🏟️ ========")
+    print(f"=== GUERRA: {reino1_data['nombre']} ⚔️ vs ⚔️ {reino2_data['nombre']} ===\n")
     print("📊 ESTADO INICIAL:")
     mostrar_estado(reino1_data, reino2_data)
     
@@ -129,9 +137,11 @@ def iniciar_guerra(reino1_data, reino2_data):
         print(f"📊 ESTADO BATALLA {batallaActual}:")
         mostrar_estado(reino1_data, reino2_data)
     
+    if reino_vivo(reino1_data):
+        print(f"EL GANADOR DE LA GUERRA HA SIDO EL REINO: {reino1_data['nombre']}")
+    elif reino_vivo(reino2_data):
+        print(f"EL GANADOR DE LA GUERRA HA SIDO EL REINO: {reino2_data['nombre']}")
         
-        
-
 
 def mostrar_estado(reino1, reino2):
     """Función donde se imprime el estado de ambos reinos
@@ -140,13 +150,6 @@ def mostrar_estado(reino1, reino2):
         reino1 (dict): Diccionario donde se guardan todos los datos del reino1
         reino2 (dict): Diccionario donde se guardan todos los datos del reino2
     """
-    try:
-        from tabulate import tabulate
-    except ImportError:
-        print("ATENCIÓN, Parece que no tienes la librería tabulate instalada en python")
-        print("No te preocupes es sencillo instalarla")
-        print("Simplemente ejecuta el siguiente comando en tu terminal:")
-        print("pip install tabulate")
     
     navesReino1 = sum(1 for nave in reino1["naves"] if nave["vida"] > 0)
     navesReino2 = sum(1 for nave in reino2["naves"] if nave["vida"] > 0)
@@ -164,6 +167,15 @@ def mostrar_estado(reino1, reino2):
     print()
 
 def ambos_vivos(reino1, reino2) -> bool:
+    """_summary_
+
+    Args:
+        reino1(dict): Diccionario con los datos del reino1
+        reino2(dict): Diccionario con los datos del reino2
+
+    Returns:
+        bool: true cuando los dos reinos estan vivos, false cuando uno de ellos no
+    """
     reino1Vivo = False
     reino2Vivo = False
     
@@ -183,16 +195,27 @@ def ambos_vivos(reino1, reino2) -> bool:
     return reino1Vivo and reino2Vivo
         
 def ejecucion_batalla(reino1, reino2, numeroBatalla):
+    """Función donde se ejecuta cada una de las batallas,
+       se decide que duelos se darán dependiendo de las naves
+       o mandalorianos disponibles en ambos reinos
+
+    Args:
+        reino1(dict): Diccionario con los datos del reino1
+        reino2(dict): Diccionario con los datos del reino2
+        numeroBatalla (int): el número de batalla actual
+    """
     t.sleep(0.6)
     print("------------------------")
     print(f"==BATALLA {numeroBatalla}==")
     print("------------------------")
 
+    #aspirantes a esta batalla
     naveR1 = None
     naveR2 = None
     mandalorianoR1 = None
     mandalorianoR2 = None
     
+    #Eleccion de aspirantes (el primero que encuentre que este vivo)
     for n in reino1["naves"]:
         if n["vida"] > 0:
             naveR1 = n
@@ -210,24 +233,27 @@ def ejecucion_batalla(reino1, reino2, numeroBatalla):
             mandalorianoR2 = m
             break
     
+    #decisiones para ver que duelos se ejecutarán
+    hay_duelo_aereo = naveR1 is not None and naveR2 is not None
+    hay_duelo_terrestre = mandalorianoR1 is not None and mandalorianoR2 is not None
+    
     # Aire vs Aire
-    if naveR1 is not None and naveR2 is not None:
+    if hay_duelo_aereo:
         print(f"=== Duelo aéreo: {naveR1['nombre']} vs {naveR2['nombre']} ===")
         duelo_1v1(naveR1, naveR2)
 
     # Tierra vs Tierra
-    if mandalorianoR1 is not None and mandalorianoR2 is not None:
-        print(f"=== Duelo terrestre: Mandaloriano de {mandalorianoR1['nombre']} vs Mandaloriano de{mandalorianoR2['nombre']} ===")
+    if hay_duelo_terrestre:
+        print(f"=== Duelo terrestre: Mandaloriano de {mandalorianoR1['nombre']} vs Mandaloriano de {mandalorianoR2['nombre']} ===")
         duelo_1v1(mandalorianoR1, mandalorianoR2)
 
     # Combate cruzado cuando a los reinos no les quedan combates aereo vs aereo y terrestre vs terrestre,
     # entonces por ultimo deberan combatir los aereos y terrestres que queden
-    if naveR1 is not None and mandalorianoR2 is not None and (naveR2 is None or mandalorianoR1 is None): 
-        print(f"=== Duelo mixto: {naveR1['nombre']} vs Mandaloriano de {mandalorianoR2['nombre']} ===")
-        duelo_1v1(naveR1, mandalorianoR2)
-    elif mandalorianoR1 is not None and naveR2 is not None and (mandalorianoR2 is None or naveR1 is None):
-        print(f"=== Duelo mixto: Mandaloriano de {mandalorianoR1['nombre']} vs {naveR2['nombre']} ===")
-        duelo_1v1(mandalorianoR1, naveR2)
+    if not hay_duelo_aereo and not hay_duelo_terrestre:
+        if naveR1 is not None and mandalorianoR2 is not None:
+            duelo_1v1(naveR1, mandalorianoR2)
+        elif mandalorianoR1 is not None and naveR2 is not None:
+            duelo_1v1(mandalorianoR1, naveR2)
 
 def duelo_1v1(combatiente1, combatiente2):
     """Logica de los combates
@@ -253,24 +279,24 @@ def duelo_1v1(combatiente1, combatiente2):
         t.sleep(0.3)
         print(f"=== TURNO {numeroTurno} ===")
         #ataque del mas rapido
-        print(f"{primero['nombre']}: {primero['vida']}HP ==> va a atacar a ==> {segundo['nombre']}: {segundo['vida']}HP")
+        print(f"🗡️{primero['nombre']}: {primero['vida']}HP ==> va a atacar a ==> {segundo['nombre']}: {segundo['vida']}HP")
         daño = ataque(primero, segundo)
         segundo["vida"] -= daño
         #Si lo mata, poner vida en cero para que no se quede en negativo (por si falla algo)
         if segundo["vida"] < 0:
             segundo["vida"] = 0
-            print(f"{segundo['nombre']} ha sido eliminado!")
-        print(f"Le ha inflingido {daño} puntos de daño! {segundo['nombre']}: {segundo['vida']}HP")
+            print(f"💀 {segundo['nombre']} ha sido eliminado!")
+        print(f"💥 Le ha inflingido {daño} puntos de daño! {segundo['nombre']}: {segundo['vida']}HP\n")
         
         #ataque del mas lento (si sigue vivo)
         if segundo["vida"] > 0:
-            print(f"{segundo['nombre']} va a atacar a {primero['nombre']}")
+            print(f"🗡️ {segundo['nombre']}: {segundo['vida']} va a atacar a {primero['nombre']}: {primero['vida']}")
             daño = ataque(segundo, primero)
             primero["vida"] -= daño
             if primero["vida"] < 0:
                 primero["vida"] = 0
-                print(f"{primero['nombre']} ha sido eliminado!")
-            print(f"Le ha inflingido {daño} puntos de daño! {primero['nombre']}: {primero['vida']}HP")
+                print(f"💀 {primero['nombre']} ha sido eliminado!")
+            print(f"💥 Le ha inflingido {daño} puntos de daño! {primero['nombre']}: {primero['vida']}HP\n")
 
             
         
@@ -291,26 +317,23 @@ def ataque(atacante, defensor)-> int:
     
     #Formula simple de daño, con variaciones
     return round((statAtaque / statDefensa) * 100 * r.uniform(0.8, 1.2))
-    
-            
-    
 
-            
-        
+def reino_vivo(reino):
+    return (
+        any(n["vida"] > 0 for n in reino["naves"]) or
+        any(m["vida"] > 0 for m in reino["mandalorianos"])
+    )
     
-    
-
-    
-    
-            
-            
-    
-
-    
-    
-
 def recibir_datos_reino(conexion):
-    """Recibe los datos del socket y los convierte de JSON a diccionario."""
+    """Función que recibe los datos enciados por el cliente
+       y los convierte en un diccionario de datos
+
+    Args:
+        conexion (socket.socket): Objeto de la conexion del cliente
+
+    Returns:
+        dict: Datos del reino en formato diccionario.
+    """
     try:
         data = conexion.recv(16384).decode('utf-8')
         return json.loads(data)
@@ -320,7 +343,9 @@ def recibir_datos_reino(conexion):
 
 
 def ejecutar_servidor():
-    """Función principal que mantiene el servidor en ejecución."""
+    """
+    Función principal que mantiene el servidor en ejecución.
+    """
     while True:
         print("\n=== SERVIDOR LA GUERRA DE LAS GALAXIAS (2026) ===")
         print("1. Iniciar Guerra")
@@ -328,39 +353,40 @@ def ejecutar_servidor():
         opcion = input("Seleccionar opción para continuar: ")
 
         if opcion == "1":
+            #Creación del socekt que trabaja con IPv4 y TCP
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-                server_socket.bind((HOST, PORT))
-                server_socket.listen(2)
-                server_socket.settimeout(TIEMPO_CONEXION)
+                server_socket.bind((HOST, PORT)) #Asocia el socket al puerto y direccion que recibiran los datos
+                server_socket.listen(2) #Escucha a dos conexiones de dos clientes
+                server_socket.settimeout(TIEMPO_CONEXION) #si pasa el tiempo de la constante, se cerrará el socket
 
                 reinos_conectados = []
 
                 try:
-                    print("🔥 INICIANDO GUERRA GALÁCTICA 🔥")
+                    print("\n🔥 INICIANDO GUERRA GALÁCTICA 🔥")
 
                     while len(reinos_conectados) < 2:
-                        print(f"Esperando conexión del Reino {len(reinos_conectados) + 1}")
+                        print(f"Esperando conexión del Reino {len(reinos_conectados) + 1} 🌐")
                         conn, addr = server_socket.accept()
                         print(
-                            f"Reino {len(reinos_conectados) + 1} conectado desde {addr}")
+                            f"Reino {len(reinos_conectados) + 1} conectado desde {addr} 📶")
 
                         datos = recibir_datos_reino(conn)
                         if datos:
                             # Valida que los creditos no superen el límite permitido
                             if datos['coste_total'] > MAX_CREDITOS:
                                 print(
-                                    f"X RECHAZADO: {datos['nombre']} excede los créditos.")
+                                    f"❌ RECHAZADO: {datos['nombre']} excede los créditos. 💲")
                                 conn.close()
                                 continue
 
                             reinos_conectados.append(datos)
-                            print(f"Reino '{datos['nombre']}' conectado.")
+                            print(f"⚜️ Reino '{datos['nombre']}' conectado. ⚜️")
                     mostrar_configuraciones(reinos_conectados[0], reinos_conectados[1])
                     iniciar_guerra(reinos_conectados[0], reinos_conectados[1])
 
                 except socket.timeout:
                     print(
-                        "\n[!] X TIMEOUT - No se conectaron suficientes reinos.")
+                        "\n🛜 ❌ TIMEOUT - No se conectaron suficientes reinos.")
                     print("Reiniciando servidor automáticamente...\n")
                     continue  # Vuelve al menu
 

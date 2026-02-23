@@ -5,12 +5,21 @@ Este módulo gestiona la creación del reino y la comunicación con el servidor.
 import socket
 import json
 import clases.reino as reino
-import clases.nave as nave
-import clases.mandaloriano as mandaloriano
+from clases.nave import EstrellaMuerte, Ejecutor, HalconMilenario, NaveRealNaboo, CazaEstelarJedi
+from clases.mandaloriano import MandalorianoNivel1, MandalorianoNivel2, MandalorianoNivel3, MandalorianoNivel4, MandalorianoNivel5
+import sys as sys
+try:
+    from tabulate import tabulate
+except ImportError:
+    print("\n⚠️ATENCIÓN⚠️, Parece que no tienes la librería tabulate instalada en python")
+    print("No te preocupes es sencillo instalarla")
+    print("Simplemente ejecuta el siguiente comando en tu terminal:")
+    print("pip install tabulate")
+    sys.exit(1)
 
-HOST = '127.0.0.1'
+HOST = '127.0.0.1' #PONER LA IP DEL SERVIDOR SI SE VA A EJECUTAR POR RED
 PUERTO = 5000
-LIMITE_CREDITOS = 100000
+LIMITE_CREDITOS = 50000
 
 def configurar_reino():
     """Muestra el menú principal y gestiona la configuración del reino."""
@@ -23,7 +32,8 @@ def configurar_reino():
         print("1. Agregar Naves")
         print("2. Agregar Mandalorianos")
         print("3. Ver Reino y Enviar")
-        print("4. Salir")
+        print("4. Salir\n")
+        print(f"Créditos gastados: {reino_actual.creditos_gastados} / {LIMITE_CREDITOS}\n")
 
         opcion = input("Seleccionar opción: ")
 
@@ -58,15 +68,15 @@ def configurar_reino():
 
 def gestionar_naves(reino_obj):
     """Submenú para la selección de naves."""
-    print("\n1. Estrella de la Muerte | 2. Ejecutor | 3. Halcon | 4. Naboo | 5. Jedi")
+    mostrar_catalogo_naves()
     opc = input("Selecciona nave: ")
 
     tipo_nave = {
-        "1": nave.EstrellaMuerte,
-        "2": nave.Ejecutor,
-        "3": nave.HalconMilenario,
-        "4": nave.NaveRealNaboo,
-        "5": nave.CazaEstelarJedi
+        "1": EstrellaMuerte,
+        "2": Ejecutor,
+        "3": HalconMilenario,
+        "4": NaveRealNaboo,
+        "5": CazaEstelarJedi
     }
 
     if opc in tipo_nave:
@@ -84,15 +94,15 @@ def gestionar_naves(reino_obj):
 
 def gestionar_mandalorianos(reino_obj):
     """Submenú para la selección de mandalorianos."""
-    print("\nNiveles de mandalorianos: 1, 2, 3, 4, 5")
+    mostrar_catalogo_mandalorianos()
     opc = input("Selecciona el nivel de mandaloriano: ")
 
     tipo_mandaloriano = {
-        "1": mandaloriano.MandalorianoNivel1,
-        "2": mandaloriano.MandalorianoNivel2,
-        "3": mandaloriano.MandalorianoNivel3,
-        "4": mandaloriano.MandalorianoNivel4,
-        "5": mandaloriano.MandalorianoNivel5
+        "1": MandalorianoNivel1,
+        "2": MandalorianoNivel2,
+        "3": MandalorianoNivel3,
+        "4": MandalorianoNivel4,
+        "5": MandalorianoNivel5
     }
 
     if opc in tipo_mandaloriano:
@@ -133,6 +143,74 @@ def enviar_al_servidor(reino_obj):
         print("X Error: Servidor no disponible.")
     except Exception as e:
         print(f"X Error inesperado: {e}")
+
+def mostrar_catalogo_naves():
+    """
+    Muestra una tabla con todas las naves disponibles y sus estadísticas base.
+    """
+
+    tipos_naves = [
+        CazaEstelarJedi(),
+        NaveRealNaboo(),
+        HalconMilenario(),
+        Ejecutor(),
+        EstrellaMuerte()
+    ]
+
+    tabla = []
+
+    i = 5
+    for nave in tipos_naves:
+        tabla.append([
+            i,
+            nave.nombre,
+            nave.vida,
+            nave.ataque,
+            nave.defensa,
+            nave.velocidad,
+            nave.coste
+        ])
+        i -= 1
+
+    encabezados = ["OPCIÓN", "NAVE", "VIDA", "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
+
+    print("\n🚀 CATÁLOGO DE NAVES 🚀\n")
+    print(tabulate(tabla, headers=encabezados, tablefmt="fancy_grid"))
+    print()
+    
+def mostrar_catalogo_mandalorianos():
+    """
+    Muestra una tabla con todas los mandalorianos disponibles y sus estadísticas base.
+    """
+
+    tipos_mandalorianos = [
+        MandalorianoNivel5(),
+        MandalorianoNivel4(),
+        MandalorianoNivel3(),
+        MandalorianoNivel2(),
+        MandalorianoNivel1()
+    ]
+
+    tabla = []
+
+    i = 5
+    for mandaloriano in tipos_mandalorianos:
+        tabla.append([
+            i,
+            mandaloriano.nombre,
+            mandaloriano.vida,
+            mandaloriano.ataque,
+            mandaloriano.defensa,
+            mandaloriano.velocidad,
+            mandaloriano.coste
+        ])
+        i -= 1
+
+    encabezados = ["OPCIÓN", "MANDALORIANO", "VIDA", "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
+
+    print("\n🥷 CATÁLOGO DE MANDALORIANOS 🥷\n")
+    print(tabulate(tabla, headers=encabezados, tablefmt="fancy_grid"))
+    print()
 
 if __name__ == "__main__":
     configurar_reino()
