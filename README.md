@@ -9,7 +9,7 @@ Si no sabes como ver la IPv4 del dispositivo aqui te dejo unos comandos que escr
 
 Windows: ipconfig
 
-Linux y Mac: ifconfig
+Linux y Mac:  ip a
 
 
 

@@ -82,7 +82,7 @@ def mostrar_configuraciones(reino1_data, reino2_data):
     print(f"Coste total: {reino2_data['coste_total']}✓\n")
     print("✅ Ambos Reinos configurados correctamente. ¡INICIANDO BATALLA!\n")
 
-    
+
     return
 
 def contar_naves_por_tipo(tipos, reino):
@@ -130,18 +130,18 @@ def iniciar_guerra(reino1_data, reino2_data):
     mostrar_estado(reino1_data, reino2_data)
     
     #Bucle de turnos:
-    batallaActual = 0
+    batalla_actual = 0
     while ambos_vivos(reino1_data, reino2_data):
-        batallaActual += 1
-        ejecucion_batalla(reino1_data, reino2_data, batallaActual)
-        print(f"📊 ESTADO BATALLA {batallaActual}:")
+        batalla_actual += 1
+        ejecucion_batalla(reino1_data, reino2_data, batalla_actual)
+        print(f"📊 ESTADO BATALLA {batalla_actual}:")
         mostrar_estado(reino1_data, reino2_data)
-    
+
     if reino_vivo(reino1_data):
         print(f"EL GANADOR DE LA GUERRA HA SIDO EL REINO: {reino1_data['nombre']}")
     elif reino_vivo(reino2_data):
         print(f"EL GANADOR DE LA GUERRA HA SIDO EL REINO: {reino2_data['nombre']}")
-        
+
 
 def mostrar_estado(reino1, reino2):
     """Función donde se imprime el estado de ambos reinos
@@ -150,15 +150,15 @@ def mostrar_estado(reino1, reino2):
         reino1 (dict): Diccionario donde se guardan todos los datos del reino1
         reino2 (dict): Diccionario donde se guardan todos los datos del reino2
     """
-    
-    navesReino1 = sum(1 for nave in reino1["naves"] if nave["vida"] > 0)
-    navesReino2 = sum(1 for nave in reino2["naves"] if nave["vida"] > 0)
-    mandalorianosReino1 = sum(1 for mandaloriano in reino1["mandalorianos"] if mandaloriano["vida"] > 0)
-    mandalorianosReino2 = sum(1 for mandaloriano in reino2["mandalorianos"] if mandaloriano["vida"] > 0)
+
+    naves_reino1 = sum(1 for nave in reino1["naves"] if nave["vida"] > 0)
+    naves_reino2 = sum(1 for nave in reino2["naves"] if nave["vida"] > 0)
+    mandalorianos_reino1 = sum(1 for mandaloriano in reino1["mandalorianos"] if mandaloriano["vida"] > 0)
+    mandalorianos_reino2 = sum(1 for mandaloriano in reino2["mandalorianos"] if mandaloriano["vida"] > 0)
 
     data = [
-        [reino1["nombre"], navesReino1, mandalorianosReino1],
-        [reino2["nombre"], navesReino2, mandalorianosReino2]
+        [reino1["nombre"], naves_reino1, mandalorianos_reino1],
+        [reino2["nombre"], naves_reino2, mandalorianos_reino2]
     ]
 
     headers = ["REINO", "NAVES", "MANDALORIANOS"]
@@ -176,25 +176,25 @@ def ambos_vivos(reino1, reino2) -> bool:
     Returns:
         bool: true cuando los dos reinos estan vivos, false cuando uno de ellos no
     """
-    reino1Vivo = False
-    reino2Vivo = False
+    reino1_vivo = False
+    reino2_vivo = False
     
     for nave in reino1["naves"]:
         if nave["vida"] > 0:
-            reino1Vivo = True
+            reino1_vivo = True
     for mandaloriano in reino1["mandalorianos"]:
         if mandaloriano["vida"] > 0:
-            reino1Vivo = True
+            reino1_vivo = True
     for nave in reino2["naves"]:
         if nave["vida"] > 0:
-            reino2Vivo = True
+            reino2_vivo = True
     for mandaloriano in reino2["mandalorianos"]:
         if mandaloriano["vida"] > 0:
-            reino2Vivo = True
+            reino2_vivo = True
     
-    return reino1Vivo and reino2Vivo
+    return reino1_vivo and reino2_vivo
         
-def ejecucion_batalla(reino1, reino2, numeroBatalla):
+def ejecucion_batalla(reino1, reino2, numero_batalla):
     """Función donde se ejecuta cada una de las batallas,
        se decide que duelos se darán dependiendo de las naves
        o mandalorianos disponibles en ambos reinos
@@ -202,58 +202,58 @@ def ejecucion_batalla(reino1, reino2, numeroBatalla):
     Args:
         reino1(dict): Diccionario con los datos del reino1
         reino2(dict): Diccionario con los datos del reino2
-        numeroBatalla (int): el número de batalla actual
+        numero_batalla (int): el número de batalla actual
     """
     t.sleep(0.6)
     print("------------------------")
-    print(f"==BATALLA {numeroBatalla}==")
+    print(f"==BATALLA {numero_batalla}==")
     print("------------------------")
 
     #aspirantes a esta batalla
-    naveR1 = None
-    naveR2 = None
-    mandalorianoR1 = None
-    mandalorianoR2 = None
+    nave_r1 = None
+    nave_r2 = None
+    mandaloriano_r1 = None
+    mandaloriano_r2 = None
     
     #Eleccion de aspirantes (el primero que encuentre que este vivo)
     for n in reino1["naves"]:
         if n["vida"] > 0:
-            naveR1 = n
+            nave_r1 = n
             break
     for n in reino2["naves"]:
         if n["vida"] > 0:
-            naveR2 = n
+            nave_r2 = n
             break
     for m in reino1["mandalorianos"]:
         if m["vida"] > 0:
-            mandalorianoR1 = m
+            mandaloriano_r1 = m
             break
     for m in reino2["mandalorianos"]:
         if m["vida"] > 0:
-            mandalorianoR2 = m
+            mandaloriano_r2 = m
             break
     
     #decisiones para ver que duelos se ejecutarán
-    hay_duelo_aereo = naveR1 is not None and naveR2 is not None
-    hay_duelo_terrestre = mandalorianoR1 is not None and mandalorianoR2 is not None
+    hay_duelo_aereo = nave_r1 is not None and nave_r2 is not None
+    hay_duelo_terrestre = mandaloriano_r1 is not None and mandaloriano_r2 is not None
     
     # Aire vs Aire
     if hay_duelo_aereo:
-        print(f"=== Duelo aéreo: {naveR1['nombre']} vs {naveR2['nombre']} ===")
-        duelo_1v1(naveR1, naveR2)
+        print(f"=== Duelo aéreo: {nave_r1['nombre']} vs {nave_r2['nombre']} ===")
+        duelo_1v1(nave_r1, nave_r2)
 
     # Tierra vs Tierra
     if hay_duelo_terrestre:
-        print(f"=== Duelo terrestre: Mandaloriano de {mandalorianoR1['nombre']} vs Mandaloriano de {mandalorianoR2['nombre']} ===")
-        duelo_1v1(mandalorianoR1, mandalorianoR2)
+        print(f"=== Duelo terrestre: Mandaloriano de {mandaloriano_r1['nombre']} vs Mandaloriano de {mandaloriano_r2['nombre']} ===")
+        duelo_1v1(mandaloriano_r1, mandaloriano_r2)
 
     # Combate cruzado cuando a los reinos no les quedan combates aereo vs aereo y terrestre vs terrestre,
     # entonces por ultimo deberan combatir los aereos y terrestres que queden
     if not hay_duelo_aereo and not hay_duelo_terrestre:
-        if naveR1 is not None and mandalorianoR2 is not None:
-            duelo_1v1(naveR1, mandalorianoR2)
-        elif mandalorianoR1 is not None and naveR2 is not None:
-            duelo_1v1(mandalorianoR1, naveR2)
+        if nave_r1 is not None and mandaloriano_r2 is not None:
+            duelo_1v1(nave_r1, mandaloriano_r2)
+        elif mandaloriano_r1 is not None and nave_r2 is not None:
+            duelo_1v1(mandaloriano_r1, nave_r2)
 
 def duelo_1v1(combatiente1, combatiente2):
     """Logica de los combates
@@ -265,19 +265,19 @@ def duelo_1v1(combatiente1, combatiente2):
     #cual tendra su turno primero
     if combatiente1["velocidad"] > combatiente2["velocidad"]:
         primero, segundo = combatiente1, combatiente2
-    elif combatiente1["velocidad"] < combatiente2["velocidad"]:
+    else:
         primero, segundo = combatiente2, combatiente1
-    
-    numeroTurno = 0
+
+    numero_turno = 0
     while combatiente1["vida"] > 0 and combatiente2["vida"] > 0:
         #Esta dentro del while para que cada turno cambie la prioridad para que sea justo
         if combatiente1["velocidad"] == combatiente2["velocidad"]:
             #Si las velocidades son las mismas, se elije uno aleatoriamente
             primero, segundo = r.choice([(combatiente1, combatiente2),
                                         (combatiente2, combatiente1)])
-        numeroTurno += 1
+        numero_turno += 1
         t.sleep(0.3)
-        print(f"=== TURNO {numeroTurno} ===")
+        print(f"=== TURNO {numero_turno} ===")
         #ataque del mas rapido
         print(f"🗡️{primero['nombre']}: {primero['vida']}HP ==> va a atacar a ==> {segundo['nombre']}: {segundo['vida']}HP")
         daño = ataque(primero, segundo)
@@ -298,9 +298,9 @@ def duelo_1v1(combatiente1, combatiente2):
                 print(f"💀 {primero['nombre']} ha sido eliminado!")
             print(f"💥 Le ha inflingido {daño} puntos de daño! {primero['nombre']}: {primero['vida']}HP\n")
 
-            
-        
-        
+
+
+
 
 def ataque(atacante, defensor)-> int:
     """Esta función usa las estadisticas de ataque y defensa, y mediante una fórmula calcula el daño
@@ -312,18 +312,18 @@ def ataque(atacante, defensor)-> int:
     Returns:
         int: Daño inflingido
     """
-    statAtaque = atacante["ataque"]
-    statDefensa = max(1, defensor["defensa"]) #esto hace que no sea cero y hayan errores
+    stat_ataque = atacante["ataque"]
+    stat_defensa = max(1, defensor["defensa"]) #esto hace que no sea cero y hayan errores
     
     #Formula simple de daño, con variaciones
-    return round((statAtaque / statDefensa) * 100 * r.uniform(0.8, 1.2))
+    return round((stat_ataque / stat_defensa) * 100 * r.uniform(0.8, 1.2))
 
 def reino_vivo(reino):
     return (
         any(n["vida"] > 0 for n in reino["naves"]) or
         any(m["vida"] > 0 for m in reino["mandalorianos"])
     )
-    
+
 def recibir_datos_reino(conexion):
     """Función que recibe los datos enciados por el cliente
        y los convierte en un diccionario de datos
