@@ -7,8 +7,9 @@ Para ejecutarse en red y poder jugar desde distintos dispositivos deberás entra
 
 Si no sabes como ver la IPv4 del dispositivo aqui te dejo unos comandos que escribiras en tu cmd para que se muestre:
 
--Windows: ipconfig
--Linux y Mac: ifconfig
+Windows: ipconfig
+
+Linux y Mac: ifconfig
 
 
 
@@ -99,8 +100,9 @@ Sigue las instrucciones en pantalla:
 
 ## 👥 Autores
 
--Eduardo Sumariva Salgado | 2ºDAM
--Carlos Fraidias Del Valle | 2ºDAM
+Eduardo Sumariva Salgado | 2ºDAM
+
+Carlos Fraidias Del Valle | 2ºDAM
 
 ## 📄 Licencia
 
