@@ -13,7 +13,7 @@ import sys as sys
 try:
     from tabulate import tabulate
 except ImportError:
-    print("\n⚠️ATENCIÓN⚠️, Parece que no tienes la librería tabulate instalada en python")
+    print("\n⚠ ATENCIÓN ⚠, Parece que no tienes la librería tabulate instalada en python")
     print("No te preocupes es sencillo instalarla")
     print("Simplemente ejecuta el siguiente comando en tu terminal:")
     print("pip install tabulate")
