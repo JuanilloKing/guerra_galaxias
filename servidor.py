@@ -204,7 +204,7 @@ def ejecucion_batalla(reino1, reino2, numero_batalla):
         reino2(dict): Diccionario con los datos del reino2
         numero_batalla (int): el número de batalla actual
     """
-    t.sleep(0.6)
+    t.sleep(0.8)
     print("------------------------")
     print(f"==BATALLA {numero_batalla}==")
     print("------------------------")
@@ -232,11 +232,11 @@ def ejecucion_batalla(reino1, reino2, numero_batalla):
         if m["vida"] > 0:
             mandaloriano_r2 = m
             break
-    
+
     #decisiones para ver que duelos se ejecutarán
     hay_duelo_aereo = nave_r1 is not None and nave_r2 is not None
     hay_duelo_terrestre = mandaloriano_r1 is not None and mandaloriano_r2 is not None
-    
+
     # Aire vs Aire
     if hay_duelo_aereo:
         print(f"=== Duelo aéreo: {nave_r1['nombre']} vs {nave_r2['nombre']} ===")
@@ -276,7 +276,7 @@ def duelo_1v1(combatiente1, combatiente2):
             primero, segundo = r.choice([(combatiente1, combatiente2),
                                         (combatiente2, combatiente1)])
         numero_turno += 1
-        t.sleep(0.3)
+        t.sleep(0.4)
         print(f"=== TURNO {numero_turno} ===")
         #ataque del mas rapido
         print(f"🗡️{primero['nombre']}: {primero['vida']}HP ==> va a atacar a ==> {segundo['nombre']}: {segundo['vida']}HP")

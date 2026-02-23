@@ -17,9 +17,10 @@ except ImportError:
     print("pip install tabulate")
     sys.exit(1)
 
-HOST = '127.0.0.1' #PONER LA IP DEL SERVIDOR SI SE VA A EJECUTAR POR RED
+HOST = '127.0.0.1'  # PONER LA IP DEL SERVIDOR SI SE VA A EJECUTAR POR RED
 PUERTO = 5000
 LIMITE_CREDITOS = 50000
+
 
 def configurar_reino():
     """Muestra el menú principal y gestiona la configuración del reino."""
@@ -33,10 +34,10 @@ def configurar_reino():
         print("2. Agregar Mandalorianos")
         print("3. Ver Reino y Enviar")
         print("4. Salir\n")
-        print(f"Créditos gastados: {reino_actual.creditos_gastados} / {LIMITE_CREDITOS}\n")
+        print(
+            f"Créditos gastados: {reino_actual.creditos_gastados} / {LIMITE_CREDITOS}\n")
 
         opcion = input("Seleccionar opción: ")
-
 
         if opcion == "1":
             if not reino_actual:
@@ -55,7 +56,8 @@ def configurar_reino():
                 print("No hay datos para mostrar.")
             else:
                 mostrar_reino(reino_actual)
-                confirmar = input("¿Deseas enviar estos datos al servidor? (s/n): ")
+                confirmar = input(
+                    "¿Deseas enviar estos datos al servidor? (s/n): ")
                 if confirmar.lower() == 's':
                     enviar_al_servidor(reino_actual)
                     break
@@ -65,6 +67,7 @@ def configurar_reino():
             break
         else:
             print("Opción no válida.")
+
 
 def gestionar_naves(reino_obj):
     """Submenú para la selección de naves."""
@@ -92,6 +95,7 @@ def gestionar_naves(reino_obj):
         except ValueError:
             print("Error: Introduce un número válido.")
 
+
 def gestionar_mandalorianos(reino_obj):
     """Submenú para la selección de mandalorianos."""
     mostrar_catalogo_mandalorianos()
@@ -117,12 +121,53 @@ def gestionar_mandalorianos(reino_obj):
         except ValueError:
             print("Error: Introduce un número válido.")
 
+
 def mostrar_reino(reino_obj):
-    """Muestra el estado actual del reino."""
-    print(f"\n--- ESTADO DE: {reino_obj.nombre} ---")
-    print(f"Naves: {len(reino_obj.naves)}")
-    print(f"Mandalorianos: {len(reino_obj.mandalorianos)}")
-    print(f"Coste Total: {reino_obj.creditos_gastados} / {LIMITE_CREDITOS}")
+    """Muestra el estado actual del reino usando tablas decorativas."""
+    print(f"\n{'='*50}")
+    print(f" ESTADO ACTUAL DEL REINO: {reino_obj.nombre.upper()} ")
+    print(f"{'='*50}")
+
+    if reino_obj.naves:
+        tabla_naves = []
+        conteo_naves = {}
+        for n in reino_obj.naves:
+            conteo_naves[n.nombre] = conteo_naves.get(n.nombre, 0) + 1
+
+        for nombre, cantidad in conteo_naves.items():
+            tabla_naves.append([nombre, cantidad])
+
+        print("\n UNIDADES AÉREAS:")
+        print(tabulate(tabla_naves, headers=[
+              "NAVE", "CANTIDAD"], tablefmt="fancy_grid"))
+    else:
+        print("\n No hay naves en el hangar.")
+
+    if reino_obj.mandalorianos:
+        tabla_mandalos = []
+        conteo_mandalos = {}
+        for m in reino_obj.mandalorianos:
+            conteo_mandalos[m.nombre] = conteo_mandalos.get(m.nombre, 0) + 1
+
+        for nombre, cantidad in conteo_mandalos.items():
+            tabla_mandalos.append([nombre, cantidad])
+
+        print("\n UNIDADES TERRESTRES:")
+        print(tabulate(tabla_mandalos, headers=[
+              "NIVEL", "CANTIDAD"], tablefmt="fancy_grid"))
+    else:
+        print("\n No hay mandalorianos en el cuartel.")
+
+    resumen_economico = [
+        ["CRÉDITOS GASTADOS", f"{reino_obj.creditos_gastados} "],
+        ["LÍMITE PERMITIDO", f"{LIMITE_CREDITOS} "],
+        ["RESTANTE", f"{LIMITE_CREDITOS - reino_obj.creditos_gastados} 💰"]
+    ]
+
+    print("\n📊 RESUMEN ECONÓMICO:")
+    print(tabulate(resumen_economico, tablefmt="simple"))
+    print(f"{'='*50}\n")
+
 
 def enviar_al_servidor(reino_obj):
     """Serializa y envía los datos al servidor central."""
@@ -143,6 +188,7 @@ def enviar_al_servidor(reino_obj):
         print("X Error: Servidor no disponible.")
     except Exception as e:
         print(f"X Error inesperado: {e}")
+
 
 def mostrar_catalogo_naves():
     """
@@ -172,12 +218,14 @@ def mostrar_catalogo_naves():
         ])
         i -= 1
 
-    encabezados = ["OPCIÓN", "NAVE", "VIDA", "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
+    encabezados = ["OPCIÓN", "NAVE", "VIDA",
+                   "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
 
     print("\n🚀 CATÁLOGO DE NAVES 🚀\n")
     print(tabulate(tabla, headers=encabezados, tablefmt="fancy_grid"))
     print()
-    
+
+
 def mostrar_catalogo_mandalorianos():
     """
     Muestra una tabla con todas los mandalorianos disponibles y sus estadísticas base.
@@ -206,11 +254,13 @@ def mostrar_catalogo_mandalorianos():
         ])
         i -= 1
 
-    encabezados = ["OPCIÓN", "MANDALORIANO", "VIDA", "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
+    encabezados = ["OPCIÓN", "MANDALORIANO", "VIDA",
+                   "ATAQUE", "DEFENSA", "VELOCIDAD", "COSTE"]
 
     print("\n🥷 CATÁLOGO DE MANDALORIANOS 🥷\n")
     print(tabulate(tabla, headers=encabezados, tablefmt="fancy_grid"))
     print()
+
 
 if __name__ == "__main__":
     configurar_reino()

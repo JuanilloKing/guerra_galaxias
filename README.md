@@ -107,7 +107,3 @@ Carlos Fraidias Del Valle | 2ºDAM
 ## 📄 Licencia
 
 Este proyecto es de uso educativo.
-
----
-
-**¡Que gane la mejor estrategia! 🌟**
